@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:summary="Broadcast"
+        android:title="Broadcast" >
+
+       <Preference
+            android:key="clock_broadcast"
+            android:title="Clocks" 
+            android:summary="Register to action time tick broadcasts"/>
+        
+    </PreferenceCategory>
+        
+
+
+</PreferenceScreen>

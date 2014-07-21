@@ -1,17 +1,46 @@
 package com.job.practice;
 
-import android.app.Activity;
+import com.job.practice.broadcast.TimeTickReceiver;
+import com.job.practice.broadcast.screens.ClockScreen;
+
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class PracticeActivity extends Activity {
+public class PracticeActivity extends PreferenceActivity implements OnPreferenceClickListener {
 
+	private final String CLOCK_BROADCAST_KEY = "clock_broadcast";
+	
+	IntentFilter intentFilter;
+	TimeTickReceiver ttr;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.practice_activity);
+        addPreferencesFromResource(R.layout.main_activity);
+        
+        Preference clockBroadCastPrefs  = (Preference) findPreference(CLOCK_BROADCAST_KEY);
+        clockBroadCastPrefs.setOnPreferenceClickListener(this);
+    }
+    
+    @Override
+    protected void onResume() {
+    	// TODO Auto-generated method stub
+    	super.onResume();
+    }
+    
+    @Override
+    protected void onPause() {
+    	// TODO Auto-generated method stub
+    	super.onPause();
     }
 
 
@@ -33,4 +62,24 @@ public class PracticeActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+	@Override
+	public boolean onPreferenceClick(Preference pref) 
+	{
+		String key = pref.getKey();
+		
+		if (key.equals(CLOCK_BROADCAST_KEY))
+		{
+			//Start Activity
+			Intent activityIntent = new Intent(this, ClockScreen.class);
+			this.startActivity(activityIntent);
+
+			
+			return true;
+		}
+		
+		return false;
+		
+	}
 }

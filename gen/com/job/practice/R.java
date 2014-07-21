@@ -28,7 +28,8 @@ public final class R {
         public static final int action_settings=0x7f080000;
     }
     public static final class layout {
-        public static final int practice_activity=0x7f030000;
+        public static final int clock_screen=0x7f030000;
+        public static final int main_activity=0x7f030001;
     }
     public static final class menu {
         public static final int practice=0x7f070000;
