@@ -11,6 +11,12 @@
             android:summary="Register to action time tick broadcasts - show toast every 1 minute"
             android:title="Time tick broadcast" />
         
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="time_tick_broadcast_anr"
+            android:summary="Cause ANR to time tick broadcast - Toast won't be shown"
+            android:title="Time tick broadcast ANR" />
+        
     </PreferenceCategory>
         
 

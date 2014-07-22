@@ -1,20 +1,22 @@
 package com.job.practice;
 
-import com.job.practice.broadcast.TimeTickReceiver;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.job.practice.broadcast.TimeTickReceiver;
+
 
 public class PracticeActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
-	private final String CLOCK_BROADCAST_KEY = "time_tick_broadcast";
+	private final String TIME_TICK_BROADCAST_KEY = "time_tick_broadcast";
+	public final static String TIME_TICK_BROADCAST_ANR_KEY = "time_tick_broadcast_anr";
 	
 	IntentFilter mIntentFilter;
 	TimeTickReceiver mTtr;
@@ -29,7 +31,41 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
     protected void onResume() {
     	// TODO Auto-generated method stub
     	super.onResume();
-    	getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    	
+    	SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+    	
+    	sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    	
+    	Preference anrTimeTick  = (Preference) findPreference(TIME_TICK_BROADCAST_ANR_KEY);
+
+    	boolean startTimeTick = sharedPreferences.getBoolean(TIME_TICK_BROADCAST_KEY, false);
+    	
+    	if (startTimeTick)
+    	{
+    		
+			if (mTtr != null)
+			{
+				unregisterReceiver(mTtr);
+				mTtr = null;
+			}
+    		
+			//Register broadcast
+			mTtr = new TimeTickReceiver();
+			mIntentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
+			registerReceiver(mTtr, mIntentFilter);
+			
+    		anrTimeTick.setEnabled(true);
+    	}
+    	else
+    	{
+			if (mTtr != null)
+			{
+				unregisterReceiver(mTtr);
+				mTtr = null;
+			}
+			
+    		anrTimeTick.setEnabled(false);
+    	}
 
     }
     
@@ -37,6 +73,13 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
     protected void onPause() {
     	// TODO Auto-generated method stub
     	getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    	
+		if (mTtr != null)
+		{
+			unregisterReceiver(mTtr);
+			mTtr = null;
+		}
+		
     	super.onPause();
     }
 
@@ -65,16 +108,20 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) 
 	{
-		if (key.equals(CLOCK_BROADCAST_KEY))
+		if (key.equals(TIME_TICK_BROADCAST_KEY))
 		{
-			boolean startTimeTick = sharedPreferences.getBoolean(CLOCK_BROADCAST_KEY, false);
-			
+			boolean startTimeTick = sharedPreferences.getBoolean(TIME_TICK_BROADCAST_KEY, false);
+		
+	        Preference anrTimeTick  = (Preference) findPreference(TIME_TICK_BROADCAST_ANR_KEY);
+
 			if (startTimeTick)
 			{
 				//Register broadcast
 				mTtr = new TimeTickReceiver();
 				mIntentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
 				registerReceiver(mTtr, mIntentFilter);
+				
+				anrTimeTick.setEnabled(true);
 			}
 			else
 			{
@@ -83,6 +130,8 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
 					unregisterReceiver(mTtr);
 					mTtr = null;
 				}
+				
+				anrTimeTick.setEnabled(false);
 			}
 		}
 	}
