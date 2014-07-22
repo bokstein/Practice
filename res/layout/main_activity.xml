@@ -5,10 +5,11 @@
         android:summary="Broadcast"
         android:title="Broadcast" >
 
-       <Preference
-            android:key="clock_broadcast"
-            android:title="Clocks" 
-            android:summary="Register to action time tick broadcasts"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="time_tick_broadcast"
+            android:summary="Register to action time tick broadcasts - show toast every 1 minute"
+            android:title="Time tick broadcast" />
         
     </PreferenceCategory>
         

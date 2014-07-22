@@ -1,45 +1,42 @@
 package com.job.practice;
 
 import com.job.practice.broadcast.TimeTickReceiver;
-import com.job.practice.broadcast.screens.ClockScreen;
 
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class PracticeActivity extends PreferenceActivity implements OnPreferenceClickListener {
+public class PracticeActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
-	private final String CLOCK_BROADCAST_KEY = "clock_broadcast";
+	private final String CLOCK_BROADCAST_KEY = "time_tick_broadcast";
 	
-	IntentFilter intentFilter;
-	TimeTickReceiver ttr;
+	IntentFilter mIntentFilter;
+	TimeTickReceiver mTtr;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.layout.main_activity);
-        
-        Preference clockBroadCastPrefs  = (Preference) findPreference(CLOCK_BROADCAST_KEY);
-        clockBroadCastPrefs.setOnPreferenceClickListener(this);
     }
     
     @Override
     protected void onResume() {
     	// TODO Auto-generated method stub
     	super.onResume();
+    	getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
     }
     
     @Override
     protected void onPause() {
     	// TODO Auto-generated method stub
+    	getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     	super.onPause();
     }
 
@@ -65,21 +62,28 @@ public class PracticeActivity extends PreferenceActivity implements OnPreference
 
 
 	@Override
-	public boolean onPreferenceClick(Preference pref) 
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) 
 	{
-		String key = pref.getKey();
-		
 		if (key.equals(CLOCK_BROADCAST_KEY))
 		{
-			//Start Activity
-			Intent activityIntent = new Intent(this, ClockScreen.class);
-			this.startActivity(activityIntent);
-
+			boolean startTimeTick = sharedPreferences.getBoolean(CLOCK_BROADCAST_KEY, false);
 			
-			return true;
+			if (startTimeTick)
+			{
+				//Register broadcast
+				mTtr = new TimeTickReceiver();
+				mIntentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
+				registerReceiver(mTtr, mIntentFilter);
+			}
+			else
+			{
+				if (mTtr != null)
+				{
+					unregisterReceiver(mTtr);
+					mTtr = null;
+				}
+			}
 		}
-		
-		return false;
-		
 	}
 }
