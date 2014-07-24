@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,10 +14,17 @@ import android.view.MenuItem;
 import com.job.practice.broadcast.TimeTickReceiver;
 
 
-public class PracticeActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+public class PracticeActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener, OnPreferenceClickListener {
 
 	private final String TIME_TICK_BROADCAST_KEY = "time_tick_broadcast";
+	private final String BROADCAST_PRIORITY_KEY = "broadcast_priority";
+	
 	public final static String TIME_TICK_BROADCAST_ANR_KEY = "time_tick_broadcast_anr";
+	public final static String MY_ACTION = "com.job.practice.intent.action.simple_action";
+	
+
+	
+	
 	
 	IntentFilter mIntentFilter;
 	TimeTickReceiver mTtr;
@@ -34,9 +42,12 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
     	
     	SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
     	
+    	Preference broadcastPriority = (Preference) findPreference(TIME_TICK_BROADCAST_ANR_KEY);;
+    	
     	sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     	
-    	Preference anrTimeTick  = (Preference) findPreference(TIME_TICK_BROADCAST_ANR_KEY);
+    	Preference anrTimeTick  = (Preference) findPreference(BROADCAST_PRIORITY_KEY);
+    	anrTimeTick.setOnPreferenceClickListener(this);
 
     	boolean startTimeTick = sharedPreferences.getBoolean(TIME_TICK_BROADCAST_KEY, false);
     	
@@ -134,5 +145,21 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
 				anrTimeTick.setEnabled(false);
 			}
 		}
+	}
+
+	@Override
+	public boolean onPreferenceClick(Preference pref) 
+	{
+		String key = pref.getKey();
+		
+		if (key.equals(BROADCAST_PRIORITY_KEY))
+		{
+			Intent intent = new Intent(MY_ACTION);
+			sendBroadcast(intent);
+			
+			return true;
+		}
+		
+		return false;
 	}
 }
