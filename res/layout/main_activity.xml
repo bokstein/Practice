@@ -23,6 +23,27 @@
             android:title="Broadcast priority" />
         
     </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:summary="Handler"
+        android:title="handler" >
+        
+        <Preference
+            android:key="handler_message_a"
+            android:summary="Send message to handler in other thread in other class"
+            android:title="Handler Msg A" />
+        
+        <Preference
+            android:key="handler_massage_b"
+            android:summary="Send message to handler in other thread in other class"
+            android:title="Handler Msg B" />
+        
+        <Preference
+            android:key="handler_runnable"
+            android:summary="Send runnable to handler in other thread in other class"
+            android:title="Handler Runnable" />
+        
+    </PreferenceCategory>
         
 
 

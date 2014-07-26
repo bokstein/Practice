@@ -1,17 +1,22 @@
 package com.job.practice;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.job.practice.broadcast.TimeTickReceiver;
+import com.job.practice.handler.HandlerExample;
 
 
 public class PracticeActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener, OnPreferenceClickListener {
@@ -19,15 +24,19 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
 	private final String TIME_TICK_BROADCAST_KEY = "time_tick_broadcast";
 	private final String BROADCAST_PRIORITY_KEY = "broadcast_priority";
 	
+	private final String HANDLER_MASSAGE_A_KEY = "handler_message_a";
+	private final String HANDLER_MASSAGE_B_KEY = "handler_massage_b";
+	private final String HANDLER_RUNNABLE_KEY  = "handler_runnable";
+	
 	public final static String TIME_TICK_BROADCAST_ANR_KEY = "time_tick_broadcast_anr";
 	public final static String MY_ACTION = "com.job.practice.intent.action.simple_action";
 	
-
-	
-	
+	private final Context mContext = this;
 	
 	IntentFilter mIntentFilter;
 	TimeTickReceiver mTtr;
+	
+	private Runnable mRunnable;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +56,14 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
     	sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     	
     	Preference anrTimeTick  = (Preference) findPreference(BROADCAST_PRIORITY_KEY);
+    	Preference handlerMsgA  = (Preference) findPreference(HANDLER_MASSAGE_A_KEY);
+    	Preference handlerMsgB  = (Preference) findPreference(HANDLER_MASSAGE_B_KEY);
+    	Preference handlerRunnable  = (Preference) findPreference(HANDLER_RUNNABLE_KEY);
+    	
     	anrTimeTick.setOnPreferenceClickListener(this);
+    	handlerMsgA.setOnPreferenceClickListener(this);
+    	handlerMsgB.setOnPreferenceClickListener(this);
+    	handlerRunnable.setOnPreferenceClickListener(this);
 
     	boolean startTimeTick = sharedPreferences.getBoolean(TIME_TICK_BROADCAST_KEY, false);
     	
@@ -156,6 +172,67 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
 		{
 			Intent intent = new Intent(MY_ACTION);
 			sendBroadcast(intent);
+			
+			return true;
+		}
+		else if (key.equals(HANDLER_MASSAGE_A_KEY))
+		{
+			HandlerExample handlerExample = new HandlerExample(this);
+			//Wait for the thread to finish
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Handler handler = handlerExample.getHandler();
+
+			handler.sendEmptyMessage(HandlerExample.MSG_A);
+			
+			return true;
+		}
+		else if (key.equals(HANDLER_MASSAGE_B_KEY))
+		{
+			HandlerExample handlerExample = new HandlerExample(this);
+			//Wait for the thread to finish
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Handler handler = handlerExample.getHandler();
+
+			handler.sendEmptyMessage(HandlerExample.MSG_B);
+			
+			return true;
+		}
+		else if (key.equals(HANDLER_RUNNABLE_KEY))
+		{
+			HandlerExample handlerExample = new HandlerExample(this);
+			//Wait for the thread to finish
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Handler handler = handlerExample.getHandler();
+			
+			mRunnable = new Runnable()
+			{
+				public void run() 
+				{
+					//Toast parameters
+					int duration = Toast.LENGTH_SHORT;
+					CharSequence text = "Handler: Running runnable thread";
+					
+					Toast toast = Toast.makeText(mContext, text, duration);
+					toast.show();
+				}
+			};
+
+			handler.post(mRunnable);
 			
 			return true;
 		}
