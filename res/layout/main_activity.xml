@@ -44,6 +44,17 @@
             android:title="Handler Runnable" />
         
     </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:summary="AsyncTask"
+        android:title="AsyncTask" >
+        
+        <Preference
+            android:key="async_task"
+            android:summary="Run asynctask"
+            android:title="AsyncTask" />
+        
+    </PreferenceCategory>
         
 
 

@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.job.practice.asynctask.AsyncTaskExample;
 import com.job.practice.broadcast.TimeTickReceiver;
 import com.job.practice.handler.HandlerExample;
 
@@ -27,6 +28,8 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
 	private final String HANDLER_MASSAGE_A_KEY = "handler_message_a";
 	private final String HANDLER_MASSAGE_B_KEY = "handler_massage_b";
 	private final String HANDLER_RUNNABLE_KEY  = "handler_runnable";
+	
+	private final String ASYNC_TASK_KEY = "async_task";
 	
 	public final static String TIME_TICK_BROADCAST_ANR_KEY = "time_tick_broadcast_anr";
 	public final static String MY_ACTION = "com.job.practice.intent.action.simple_action";
@@ -55,15 +58,17 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
     	
     	sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     	
-    	Preference anrTimeTick  = (Preference) findPreference(BROADCAST_PRIORITY_KEY);
-    	Preference handlerMsgA  = (Preference) findPreference(HANDLER_MASSAGE_A_KEY);
-    	Preference handlerMsgB  = (Preference) findPreference(HANDLER_MASSAGE_B_KEY);
-    	Preference handlerRunnable  = (Preference) findPreference(HANDLER_RUNNABLE_KEY);
+    	Preference anrTimeTick     = (Preference) findPreference(BROADCAST_PRIORITY_KEY);
+    	Preference handlerMsgA     = (Preference) findPreference(HANDLER_MASSAGE_A_KEY);
+    	Preference handlerMsgB     = (Preference) findPreference(HANDLER_MASSAGE_B_KEY);
+    	Preference handlerRunnable = (Preference) findPreference(HANDLER_RUNNABLE_KEY);
+    	Preference asyncTask       = (Preference) findPreference(ASYNC_TASK_KEY);
     	
     	anrTimeTick.setOnPreferenceClickListener(this);
     	handlerMsgA.setOnPreferenceClickListener(this);
     	handlerMsgB.setOnPreferenceClickListener(this);
     	handlerRunnable.setOnPreferenceClickListener(this);
+    	asyncTask.setOnPreferenceClickListener(this);
 
     	boolean startTimeTick = sharedPreferences.getBoolean(TIME_TICK_BROADCAST_KEY, false);
     	
@@ -235,6 +240,11 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
 			handler.post(mRunnable);
 			
 			return true;
+		}
+		else if (key.equals(ASYNC_TASK_KEY))
+		{
+			AsyncTaskExample asyncTask = new AsyncTaskExample(this);
+			asyncTask.execute(new String[0]);
 		}
 		
 		return false;
