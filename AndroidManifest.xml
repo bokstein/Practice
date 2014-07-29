@@ -36,7 +36,8 @@
             <intent-filter android:priority="2">
                 <action android:name="com.job.practice.intent.action.simple_action" />
             </intent-filter>
-        </receiver>  
+        </receiver>
+        <service android:name="com.job.practice.service.ServiceExample" android:process=":remote"/>
     </application>
 
 </manifest>

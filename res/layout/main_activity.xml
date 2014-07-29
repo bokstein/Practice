@@ -55,6 +55,23 @@
             android:title="AsyncTask" />
         
     </PreferenceCategory>
+    
+	<PreferenceCategory
+        android:summary="Service"
+        android:title="Service" >
+        
+	    <Preference
+            android:key="start_service"
+            android:summary="Start service - notification will appear"
+            android:title="Start Service" />
+        
+        <Preference
+            android:key="stop_service"
+            android:summary="Stop service - notification will disappear"
+            android:title="Stop Service" />
+        
+     </PreferenceCategory>
+>>>>>>> Add service example
         
 
 

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.job.practice.asynctask.AsyncTaskExample;
 import com.job.practice.broadcast.TimeTickReceiver;
 import com.job.practice.handler.HandlerExample;
+import com.job.practice.service.ServiceExample;
 
 
 public class PracticeActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener, OnPreferenceClickListener {
@@ -30,9 +31,13 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
 	private final String HANDLER_RUNNABLE_KEY  = "handler_runnable";
 	
 	private final String ASYNC_TASK_KEY = "async_task";
+
+	private final String START_SERVICE_KEY  = "start_service";
+	private final String STOP_SERVICE_KEY   = "stop_service";
 	
 	public final static String TIME_TICK_BROADCAST_ANR_KEY = "time_tick_broadcast_anr";
 	public final static String MY_ACTION = "com.job.practice.intent.action.simple_action";
+	public final static String STOP_SERVICE_ACTION = "com.job.practice.intent.action.stop_service";
 	
 	private final Context mContext = this;
 	
@@ -63,12 +68,16 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
     	Preference handlerMsgB     = (Preference) findPreference(HANDLER_MASSAGE_B_KEY);
     	Preference handlerRunnable = (Preference) findPreference(HANDLER_RUNNABLE_KEY);
     	Preference asyncTask       = (Preference) findPreference(ASYNC_TASK_KEY);
+    	Preference startService    = (Preference) findPreference(START_SERVICE_KEY);
+    	Preference stopService     = (Preference) findPreference(STOP_SERVICE_KEY);
     	
     	anrTimeTick.setOnPreferenceClickListener(this);
     	handlerMsgA.setOnPreferenceClickListener(this);
     	handlerMsgB.setOnPreferenceClickListener(this);
     	handlerRunnable.setOnPreferenceClickListener(this);
     	asyncTask.setOnPreferenceClickListener(this);
+    	startService.setOnPreferenceClickListener(this);
+    	stopService.setOnPreferenceClickListener(this);
 
     	boolean startTimeTick = sharedPreferences.getBoolean(TIME_TICK_BROADCAST_KEY, false);
     	
@@ -245,6 +254,16 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
 		{
 			AsyncTaskExample asyncTask = new AsyncTaskExample(this);
 			asyncTask.execute(new String[0]);
+		else if (key.equals(START_SERVICE_KEY))
+		{
+			Intent intent = new Intent(this, ServiceExample.class);
+			startService(intent);
+		}
+		else if (key.equals(STOP_SERVICE_KEY))
+		{
+			Intent intent = new Intent(this, ServiceExample.class);
+			intent.setAction(STOP_SERVICE_ACTION);
+			startService(intent);
 		}
 		
 		return false;
