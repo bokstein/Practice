@@ -254,6 +254,7 @@ public class PracticeActivity extends PreferenceActivity implements OnSharedPref
 		{
 			AsyncTaskExample asyncTask = new AsyncTaskExample(this);
 			asyncTask.execute(new String[0]);
+		}
 		else if (key.equals(START_SERVICE_KEY))
 		{
 			Intent intent = new Intent(this, ServiceExample.class);
