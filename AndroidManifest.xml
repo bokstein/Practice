@@ -20,8 +20,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+    			<data android:scheme="http" android:host="www.cnn.com"/>
+	        </intent-filter>
         </activity>
-        <activity android:name="com.job.practice.broadcast.screens.ClockScreen"/>
         <receiver android:name="com.job.practice.broadcast.BroadcastReceiverA">
             <intent-filter android:priority="1">
                 <action android:name="com.job.practice.intent.action.simple_action" />
